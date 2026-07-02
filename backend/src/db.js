@@ -62,7 +62,7 @@ function initDb() {
   if (bookCount.count === 0) {
     const insert = db.prepare('INSERT INTO books (name, price, stock, description) VALUES (?, ?, ?, ?)');
     const seedBooks = [
-      ['Clean Code', 35.99, 50, 'A handbook of agile software craftsmanship by Robert C. Martin. Learn how to write code that is readable, maintainable, and elegant.'],
+      ['Clean Code', 99.99, 50, 'A handbook of agile software craftsmanship by Robert C. Martin. Learn how to write code that is readable, maintainable, and elegant.'],
       ['The Pragmatic Programmer', 42.99, 30, 'From journeyman to master. A must-read for every serious developer covering best practices and career advice.'],
       ['Design Patterns', 49.99, 20, 'Elements of reusable object-oriented software. The classic Gang of Four book covering 23 design patterns.'],
       ['JavaScript: The Good Parts', 28.99, 45, 'Unearthing the excellence in JavaScript by Douglas Crockford. Focuses on the reliable and elegant subset of the language.'],
