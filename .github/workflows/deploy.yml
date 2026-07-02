@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: |
             backend/package-lock.json
@@ -55,6 +55,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+
+      - name: Validate required GitHub secrets
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          missing=()
+          [ -n "$AWS_ACCOUNT_ID" ] || missing+=("AWS_ACCOUNT_ID")
+          [ -n "$AWS_ACCESS_KEY_ID" ] || missing+=("AWS_ACCESS_KEY_ID")
+          [ -n "$AWS_SECRET_ACCESS_KEY" ] || missing+=("AWS_SECRET_ACCESS_KEY")
+          [ -n "$EC2_HOST" ] || missing+=("EC2_HOST")
+          [ -n "$EC2_SSH_KEY" ] || missing+=("EC2_SSH_KEY")
+          [ -n "$JWT_SECRET" ] || missing+=("JWT_SECRET")
+
+          if [ ${#missing[@]} -ne 0 ]; then
+            echo "::error::Missing required GitHub Actions secrets: ${missing[*]}"
+            exit 1
+          fi
+
+          echo "All required GitHub Actions secrets are present."
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
